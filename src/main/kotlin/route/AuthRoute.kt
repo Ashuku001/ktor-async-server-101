@@ -1,6 +1,7 @@
 package com.example.plugins.route
 
 import com.example.plugins.model.AuthResponse
+import com.example.plugins.model.SignInParams
 import com.example.plugins.model.SignUpParams
 import com.example.plugins.repository.user.UserRepository
 import io.ktor.http.*
@@ -16,7 +17,6 @@ fun Routing.authRouting(){
         post {
             // takes the JSON and deserialize it
             val params = call.receiveNullable<SignUpParams>()
-
             // deserialize failed
             if (params == null) {
                 call.respond(
@@ -28,9 +28,31 @@ fun Routing.authRouting(){
 
             val result = repository.signUp(params = params)
             call.respond(
-                status = result.code,
+                status = HttpStatusCode.OK,
+                message = result
+            )
+        }
+    }
+
+    route(path = "/signin") {
+        post {
+            // takes the JSON and deserialize it
+            val params = call.receiveNullable<SignInParams>()
+            // deserialize failed
+            if (params == null) {
+                call.respond(
+                    status = HttpStatusCode.BadRequest,
+                    message = AuthResponse(errorMessage = "Invalid credentials!"),
+                )
+                return@post // quit the lambda
+            }
+
+            val result = repository.signIn(params = params)
+            call.respond(
+                status = HttpStatusCode.OK,
                 message = result
             )
         }
     }
 }
+
