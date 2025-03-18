@@ -3,6 +3,7 @@ package com.example.plugins.dao.user
 import com.example.plugins.model.SignUpParams
 import com.example.plugins.model.User
 import com.example.plugins.model.UserRow
+import com.example.plugins.security.hashPassword
 import dao.DatabaseFactory.dbQuery
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
@@ -14,7 +15,7 @@ class UserDaoImpl : UserDao {
             val insertStatement = UserRow.insert {
                 it[name] = params.name
                 it[email] = params.email
-                it[password] = params.password
+                it[password] = hashPassword(params.password)
             }
 
             insertStatement.resultedValues?.singleOrNull()?.let {

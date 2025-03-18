@@ -37,7 +37,7 @@ dependencies {
     implementation(libs.ktor.server.config.yaml)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
-
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("io.insert-koin:koin-ktor:$koin_version")
     implementation("com.zaxxer:HikariCP:$hirakicp_version")
 

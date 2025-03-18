@@ -23,19 +23,19 @@ object DatabaseFactory {
     // connect to db
     private fun createHikariDataSource(): HikariDataSource {
         val driverClass = "org.postgresql.Driver"
-//        val dbPassword = applicationEnvironment().config.property("postgres.password").getString()
-//        val dbUser = applicationEnvironment().config.property("postgres.user").getString()
-//        val dbHost = applicationEnvironment().config.property("postgres.host").getString()
-//        val dbName = applicationEnvironment().config.property("postgres.name").getString()
-//        val dbPort = applicationEnvironment().config.property("postgres.port").getString()
-        val jdbcUrl = "jdbc:postgresql://${"localhost"}:${"5432"}/${"socialapp"}"
+        val dbPassword = System.getenv("postgres.password")
+        val dbUser = System.getenv("postgres.user")
+        val dbHost = System.getenv("postgres.host")
+        val dbName = System.getenv("postgres.name")
+        val dbPort = System.getenv("postgres.port")
+        val jdbcUrl = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
 
 
         val hikariConfig = HikariConfig().apply {
             driverClassName = driverClass
             setJdbcUrl(jdbcUrl)
-            password = "admin"
-            username = "postgres"
+            password = dbPassword
+            username = dbUser
             maximumPoolSize = 3
             isAutoCommit = false
             transactionIsolation = "TRANSACTION_REPEATABLE_READ"

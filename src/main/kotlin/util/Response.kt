@@ -1,17 +1,22 @@
 package com.example.plugins.util
 
 import io.ktor.http.*
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
-// sealed to restrict inheritance i.e., all classes must be declared inside the same file
-// Generic API response
-sealed class Response<T>(
-    val code: HttpStatusCode = HttpStatusCode.OK,
-    val data: T
-) {
-    class Success<T>(data: T): Response<T>(data = data)
+@Serializable
+sealed class Response<T> {
+    @Serializable
+    data class Success<T>(
+        val data: T,
+        @Contextual
+        val code: Int = HttpStatusCode.OK.value
+    ) : Response<T>()
 
-    class Error<T>(
-        code: HttpStatusCode,
-        data: T
-    ): Response<T>(code, data)
+    @Serializable
+    data class Error<T>(
+        val data: T,
+        @Contextual
+        val code: Int
+    ) : Response<T>()
 }
