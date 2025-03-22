@@ -3,7 +3,7 @@ package com.example.plugins.route
 import com.example.plugins.model.AuthResponse
 import com.example.plugins.model.SignInParams
 import com.example.plugins.model.SignUpParams
-import com.example.plugins.repository.user.UserRepository
+import com.example.plugins.repository.auth.AuthRepository
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
 fun Routing.authRouting(){
-    val repository by inject<UserRepository>()
+    val repository by inject<AuthRepository>()
 
     route(path = "/signup") {
         post {
@@ -48,6 +48,7 @@ fun Routing.authRouting(){
             }
 
             val result = repository.signIn(params = params)
+            println("result$result")
             call.respond(
                 status = HttpStatusCode.OK,
                 message = result

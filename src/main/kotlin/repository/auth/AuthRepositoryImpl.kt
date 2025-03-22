@@ -1,4 +1,4 @@
-package com.example.plugins.repository.user
+package com.example.plugins.repository.auth
 
 import com.example.plugins.dao.user.UserDao
 import com.example.plugins.generateToken
@@ -10,10 +10,10 @@ import com.example.plugins.security.hashPassword
 import com.example.plugins.util.Response
 import io.ktor.http.*
 
-class UserRepositoryImpl(
+class AuthRepositoryImpl(
     // Constructor
     private val userDao: UserDao // User data access in db TODO: include the dependency injection
-): UserRepository {
+): AuthRepository {
     override suspend fun signUp(params: SignUpParams): Response<AuthResponse> {
         return if (userAlreadyExist(params.email)) {
             Response.Error(
@@ -29,7 +29,7 @@ class UserRepositoryImpl(
                 Response.Error(
                     code = HttpStatusCode.InternalServerError.value,
                     data = AuthResponse(
-                        errorMessage = "Ooops, sorry we could not register the user, try later"
+                        errorMessage = "Oops, sorry we could not register the user, try later"
                     )
                 )
             } else {
@@ -40,7 +40,9 @@ class UserRepositoryImpl(
                             name = insertedUser.name,
                             bio = insertedUser.bio,
                             email = insertedUser.email,
-                            token = generateToken(params.email)
+                            token = generateToken(params.email),
+                            followersCount = insertedUser.followingCount,
+                            followingCount = insertedUser.followingCount
                         )
                     ),
                     code = HttpStatusCode.OK.value
@@ -62,6 +64,7 @@ class UserRepositoryImpl(
         } else {
             val hashedPassword = hashPassword(params.password)
             if(user.password == hashedPassword) {
+                println("user $user")
                 Response.Success(
                     data = AuthResponse(
                         data = AuthResponseData(
@@ -69,7 +72,9 @@ class UserRepositoryImpl(
                             name = user.name,
                             bio = user.bio,
                             email = user.email,
-                            token = generateToken(params.email)
+                            token = generateToken(params.email),
+                            followersCount = user.followingCount,
+                            followingCount = user.followingCount
                         )
                     )
                 )
@@ -77,7 +82,7 @@ class UserRepositoryImpl(
                 Response.Error(
                     code = HttpStatusCode.Forbidden.value,
                     data = AuthResponse(
-                        errorMessage = "Username or password does not match"
+                        errorMessage = "Username or password dig not match"
                     )
                 )
             }

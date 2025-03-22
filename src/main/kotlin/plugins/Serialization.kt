@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.example.plugins.model.AuthResponse
+import com.example.plugins.model.FollowAndUnfollowResponse
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -12,6 +13,7 @@ import kotlinx.serialization.modules.subclass
 val module = SerializersModule {
     polymorphic(Any::class) {
         subclass(AuthResponse::class)
+        subclass(FollowAndUnfollowResponse::class)
         // Register other subclasses as needed
     }
 }

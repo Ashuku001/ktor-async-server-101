@@ -1,10 +1,9 @@
 package dao
 
-import com.example.plugins.model.UserRow
+import com.example.plugins.dao.follows.FollowsTable
+import com.example.plugins.dao.user.UserTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -16,7 +15,10 @@ object DatabaseFactory {
     fun init() {
         Database.connect(createHikariDataSource())
         transaction {
-            SchemaUtils.create(UserRow)
+            SchemaUtils.create(
+                UserTable,
+                FollowsTable
+            )
         }
     }
 

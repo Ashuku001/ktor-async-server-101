@@ -7,6 +7,7 @@ plugins {
 
 group = "com.example"
 version = "0.0.1"
+val exposed_version = "0.58.0"
 
 val koin_version: String by project
 val hirakicp_version: String by project
@@ -40,5 +41,7 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("io.insert-koin:koin-ktor:$koin_version")
     implementation("com.zaxxer:HikariCP:$hirakicp_version")
+    implementation("de.mkammerer.snowflake-id:snowflake-id:0.0.2")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
 
 }

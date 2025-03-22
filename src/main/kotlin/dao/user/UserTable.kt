@@ -1,18 +1,20 @@
-package com.example.plugins.model
+package com.example.plugins.dao.user
 
 import org.jetbrains.exposed.sql.Table
 
 // define the model
-object UserRow: Table(name = "users") {
+object UserTable: Table(name = "users") {
 
-    val id = integer(name = "user_id").autoIncrement()
+    val id = long(name = "user_id")
     val name = varchar(name = "user_name", length = 250)
     val email = varchar(name = "user_email", length = 250)
     val bio = text(name = "user_bio").default(
         defaultValue = "Hey, what's up? Welcome to my SocialApp page!"
     )
     val password = varchar(name = "user_password", length = 100)
-    val avatar = text(name = "user_avatar").nullable()
+    val imageUrl = text(name = "image_url").nullable()
+    val followersCount = integer(name = "followers_count").default(0)
+    val followingCount = integer(name = "following_count").default(0)
 
     // override the primary key
     override  val primaryKey: PrimaryKey
@@ -20,11 +22,13 @@ object UserRow: Table(name = "users") {
 }
 
 // User model schema for User instead of UserRow
-data class User(
-    val id: Int,
+data class UserRow(
+    val id: Long,
     val name: String,
     val email: String,
     val bio: String,
-    val avatar: String?,
-    val password: String
+    val imagerUrl: String?,
+    val password: String,
+    val followingCount: Int,
+    val followersCount: Int,
 )
