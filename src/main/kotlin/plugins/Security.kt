@@ -49,9 +49,6 @@ fun Application.configureSecurity() {
 }
 
 fun generateToken(email: String): String {
-
-
-    println(">>>>>>>>>>>>>>>>>>>>>>>>>>> $jwtAudience")
     return JWT.create()
         .withAudience(jwtAudience)
         .withIssuer(jwtDomain)
