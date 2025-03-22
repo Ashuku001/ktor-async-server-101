@@ -48,7 +48,6 @@ fun Routing.authRouting(){
             }
 
             val result = repository.signIn(params = params)
-            println("result$result")
             call.respond(
                 status = HttpStatusCode.OK,
                 message = result

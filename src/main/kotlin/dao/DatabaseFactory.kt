@@ -1,6 +1,8 @@
 package dao
 
 import com.example.plugins.dao.follows.FollowsTable
+import com.example.plugins.dao.post.PostTable
+import com.example.plugins.dao.post_likes.PostLikeTable
 import com.example.plugins.dao.user.UserTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -17,7 +19,9 @@ object DatabaseFactory {
         transaction {
             SchemaUtils.create(
                 UserTable,
-                FollowsTable
+                FollowsTable,
+                PostTable,
+                PostLikeTable
             )
         }
     }

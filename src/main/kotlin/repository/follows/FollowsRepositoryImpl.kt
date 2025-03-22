@@ -54,8 +54,6 @@ class FollowsRepositoryImpl(
     override suspend fun unfollowUser(follower: Long, following: Long): Response<FollowAndUnfollowResponse> {
         val success = followDao.unfollowUser(follower, following)
 
-        println("THE SUCCESS $success", )
-
         return if(success) {
             val success2 = userDao.updateFollowsCount(follower, following, isFollowing = false)
             if(success2) {

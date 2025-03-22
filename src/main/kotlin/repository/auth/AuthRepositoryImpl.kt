@@ -64,7 +64,6 @@ class AuthRepositoryImpl(
         } else {
             val hashedPassword = hashPassword(params.password)
             if(user.password == hashedPassword) {
-                println("user $user")
                 Response.Success(
                     data = AuthResponse(
                         data = AuthResponseData(
