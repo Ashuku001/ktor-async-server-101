@@ -5,7 +5,6 @@ import com.example.plugins.security.hashPassword
 import com.example.plugins.util.IdGenerator
 import dao.DatabaseFactory.dbQuery
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.update
@@ -35,6 +34,9 @@ class UserDaoImpl : UserDao {
                 .singleOrNull()
         }
     }
+
+
+
 
     // a helper function create a User Object
     private fun rowToUser(row: ResultRow): UserRow {

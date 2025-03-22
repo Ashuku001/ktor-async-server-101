@@ -24,7 +24,6 @@ class FollowsDaoImpl : FollowsDao {
                 } > 0
             }
         } catch (e: Throwable) {
-            println("ERROR$e")
             return false
         }
 
@@ -32,24 +31,30 @@ class FollowsDaoImpl : FollowsDao {
 
     override suspend fun getFollowers(userId: Long, pageNumber: Int, pageSize: Int): List<Long> {
         return dbQuery {
+            FollowsTable.select(FollowsTable.followingId eq userId) // user being followed
+                .orderBy(FollowsTable.followsDate, SortOrder.DESC)
+                .offset(((pageNumber - 1) * pageSize).toLong())
+                .limit(pageSize)
+                .map { it[FollowsTable.followerId] }
+        }
+    }
+
+    override suspend fun getFollowing(userId: Long, pageNumber: Int, pageSize: Int): List<Long> {
+        return dbQuery {
             FollowsTable.select(FollowsTable.followerId eq userId)
                 .orderBy(FollowsTable.followsDate, SortOrder.DESC)
                 .offset(((pageNumber - 1) * pageSize).toLong())
                 .limit(pageSize)
                 .map { it[FollowsTable.followingId] }
         }
-
-
-
     }
 
-    override suspend fun getFollowing(userId: Long, pageNumber: Int, pageSize: Int): List<Long> {
+    override suspend fun getAllFollowing(userId: Long): List<Long>{
         return dbQuery {
-            FollowsTable.select(FollowsTable.followingId eq userId)
-                .orderBy(FollowsTable.followsDate, SortOrder.DESC)
-                .offset(((pageNumber - 1) * pageSize).toLong())
-                .limit(pageSize)
-                .map { it[FollowsTable.followerId] }
+            FollowsTable
+                .select(FollowsTable.columns)
+                .where(FollowsTable.followerId eq userId)
+                .map{it[FollowsTable.followingId]}
         }
     }
 
