@@ -14,6 +14,8 @@ import com.example.plugins.repository.follows.FollowsRepository
 import com.example.plugins.repository.follows.FollowsRepositoryImpl
 import com.example.plugins.repository.post.PostRepository
 import com.example.plugins.repository.post.PostRepositoryImpl
+import com.example.plugins.repository.profile.ProfileRepository
+import com.example.plugins.repository.profile.ProfileRepositoryImpl
 import org.koin.dsl.module
 
 // dependency injections
@@ -25,6 +27,9 @@ val appModule = module {
     single<FollowsDao> {FollowsDaoImpl()}
 
     single<PostLikeDao> {PostLikeDaoImpl()}
+
     single<PostDao> {PostDaoImpl()}
     single<PostRepository> {PostRepositoryImpl(get(), get(), get())}
+
+    single<ProfileRepository> {ProfileRepositoryImpl(get(), get())}
 }
