@@ -4,7 +4,9 @@ import com.example.plugins.model.SignUpParams
 import com.example.plugins.security.hashPassword
 import com.example.plugins.util.IdGenerator
 import dao.DatabaseFactory.dbQuery
+import org.h2.engine.User
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.update
@@ -35,8 +37,28 @@ class UserDaoImpl : UserDao {
         }
     }
 
+    override suspend fun findById(userId: Long): UserRow? {
+        return dbQuery {
+            UserTable
+                .select(
+                    UserTable.columns
+                )
+                .where{UserTable.id eq  userId}
+                .map { rowToUser(it) }.singleOrNull()
+        }
+    }
 
-
+    override suspend fun updateUser(userId: Long, name: String, bio: String, imageUrl: String): Boolean {
+        return dbQuery {
+            UserTable.update(
+                where = { UserTable.id eq userId },
+            ){
+                it[UserTable.name] = name
+                it[UserTable.bio] = bio
+                it[UserTable.imageUrl] = imageUrl
+            } > 0
+        }
+    }
 
     // a helper function create a User Object
     private fun rowToUser(row: ResultRow): UserRow {
