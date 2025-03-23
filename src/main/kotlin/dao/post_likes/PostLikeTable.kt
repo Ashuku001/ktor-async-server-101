@@ -14,3 +14,10 @@ object PostLikeTable: Table(name = "post_likes") {
     val likeDate = datetime(name = "like_date").default(defaultValue = LocalDateTime.now())
 }
 
+data class PostLikeRow(
+    val likeId: Long,
+    val postId: Long,
+    val userId: Long,
+    val likeDate: String
+)
+

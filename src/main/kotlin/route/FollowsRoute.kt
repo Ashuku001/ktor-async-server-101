@@ -3,8 +3,11 @@ package com.example.plugins.route
 import com.example.plugins.model.FollowAndUnfollowResponse
 import com.example.plugins.model.FollowsParams
 import com.example.plugins.repository.follows.FollowsRepository
+import com.example.plugins.util.Constants
+import com.example.plugins.util.getLongParameter
 import io.ktor.http.*
 import io.ktor.server.auth.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -16,8 +19,8 @@ fun Routing.followsRouting (
 
     // ensure user is authenticated when accessing this resource
     authenticate {
-        route(path = "/follow") {
-            post {
+        route(path = "/follows") {
+            post ("/follow") {
                 val params = call.receiveNullable<FollowsParams>()
 
                 if (params == null) {
@@ -25,22 +28,121 @@ fun Routing.followsRouting (
                         status = HttpStatusCode.BadRequest,
                         message = FollowAndUnfollowResponse(
                             success = false,
-                            message = "Oops, something went wrong"
+                            message = "Invalid parameters or missing parameters"
                         )
                     )
                     return@post
                 }
 
-                val result = if (params.isFollowing) {
-                    repository.followUser(follower = params.follower, following = params.following)
-                } else {
-                    repository.unfollowUser(follower = params.follower, following = params.following)
-                }
+                val result = repository.followUser(follower = params.follower, following = params.following)
 
                 call.respond(
                     status = HttpStatusCode.OK,
                     message = result
                 )
+            }
+
+            post ("/unfollow") {
+                val params = call.receiveNullable<FollowsParams>()
+
+                if (params == null) {
+                    call.respond(
+                        status = HttpStatusCode.BadRequest,
+                        message = FollowAndUnfollowResponse(
+                            success = false,
+                            message = "Invalid parameters or missing parameters"
+                        )
+                    )
+                    return@post
+                }
+
+                val result = repository.unfollowUser(follower = params.follower, following = params.following)
+
+                call.respond(
+                    status = HttpStatusCode.OK,
+                    message = result
+                )
+            }
+
+            get("/followers") {
+                try {
+                    val userId = call.getLongParameter(name = "userId", isQueryParameter = true)
+                    val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 0
+                    val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: Constants.DEFAULT_PAGE_SIZE
+
+                    val result = repository.getFollowers(userId = userId, pageNumber = page, pageSize = limit)
+
+                    call.respond(
+                        status = HttpStatusCode.OK,
+                        message = result
+                    )
+
+                } catch (badRequestError: BadRequestException) {
+                    call.respond(
+                        status = HttpStatusCode.BadRequest,
+                        message = "Invalid or missing parameters"
+                    )
+                } catch (anyError: Throwable) {
+                    println(anyError)
+                    call.respond(
+                        status = HttpStatusCode.InternalServerError,
+                        message = "An unexpected error occurred please try again"
+                    )
+                }
+            }
+
+            get("/following") {
+                try {
+                    val userId = call.getLongParameter(name = "userId", isQueryParameter = true)
+                    val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 0
+                    val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: Constants.DEFAULT_PAGE_SIZE
+
+                    val result = repository.getFollowing(userId = userId, pageNumber = page, pageSize = limit)
+
+                    call.respond(
+                        status = HttpStatusCode.OK,
+                        message = result
+                    )
+
+                } catch (badRequestError: BadRequestException) {
+                    call.respond(
+                        status = HttpStatusCode.BadRequest,
+                        message = "Invalid or missing parameters"
+                    )
+                } catch (anyError: Throwable) {
+                    println(anyError)
+
+                    call.respond(
+                        status = HttpStatusCode.InternalServerError,
+                        message = "An unexpected error occurred please try again"
+                    )
+                }
+            }
+
+            get("/suggestions") {
+                try {
+                    val userId = call.getLongParameter(name = "userId", isQueryParameter = true)
+
+                    val result = repository.getFollowingSuggestions(userId)
+
+                    call.respond(
+                        status = HttpStatusCode.OK,
+                        message = result
+                    )
+
+                } catch (badRequestError: BadRequestException) {
+                    call.respond(
+                        status = HttpStatusCode.BadRequest,
+                        message = "Invalid or missing parameters"
+                    )
+                } catch (anyError: Throwable) {
+                    println(anyError)
+
+                    call.respond(
+                        status = HttpStatusCode.InternalServerError,
+                        message = "An unexpected error occurred please try again"
+                    )
+                }
             }
         }
     }

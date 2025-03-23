@@ -12,6 +12,7 @@ fun Application.configureRouting() {
         postRouting()
         profileRouting()
         postCommentRouting()
+        postLikesRouting()
 
         // to view images
         static {

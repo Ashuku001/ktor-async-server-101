@@ -18,6 +18,8 @@ val module = SerializersModule {
         subclass(ProfileResponse::class)
         subclass(CommentResponse::class)
         subclass(CommentsResponse::class)
+        subclass(LikeResponse::class)
+        subclass(FollowsResponse::class)
         // Register other subclasses as needed
     }
 }
@@ -27,6 +29,7 @@ fun Application.configureSerialization() {
         json(
             Json {
                 serializersModule = module
+                encodeDefaults = true
             }
         )
     }
