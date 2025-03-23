@@ -2,6 +2,7 @@ package dao
 
 import com.example.plugins.dao.follows.FollowsTable
 import com.example.plugins.dao.post.PostTable
+import com.example.plugins.dao.post_comment.PostCommentTable
 import com.example.plugins.dao.post_likes.PostLikeTable
 import com.example.plugins.dao.user.UserTable
 import com.zaxxer.hikari.HikariConfig
@@ -21,7 +22,8 @@ object DatabaseFactory {
                 UserTable,
                 FollowsTable,
                 PostTable,
-                PostLikeTable
+                PostLikeTable,
+                PostCommentTable
             )
         }
     }

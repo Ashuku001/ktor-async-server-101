@@ -6,6 +6,7 @@ import com.example.plugins.util.IdGenerator
 import dao.DatabaseFactory.dbQuery
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 
 
 class PostDaoImpl: PostDao {
@@ -96,6 +97,32 @@ class PostDaoImpl: PostDao {
                 .where{PostTable.postId eq postId}
                 .singleOrNull()
                 ?.let { toPostRow(it) }
+        }
+    }
+
+    override suspend fun updateCommentCounts(postId: Long, decrement: Boolean): Boolean {
+        return dbQuery {
+            val value = if (decrement) -1 else 1
+            PostTable.update(
+                where = {PostTable.postId eq  postId},
+            ) {
+                it.update(
+                    column = commentsCount, value = commentsCount.plus(value)
+                )
+            } > 0
+        }
+    }
+
+    override suspend fun updateLikesCount(postId: Long, decrement: Boolean): Boolean {
+        return dbQuery {
+            val value = if (decrement) -1 else 1
+            PostTable.update(
+                where = {PostTable.postId eq  postId},
+            ) {
+                it.update(
+                    column = likesCount, value = likesCount.plus(value)
+                )
+            } > 0
         }
     }
 
