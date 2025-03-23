@@ -16,6 +16,8 @@ val module = SerializersModule {
         subclass(PostResponse::class)
         subclass(PostsResponse::class)
         subclass(ProfileResponse::class)
+        subclass(CommentResponse::class)
+        subclass(CommentsResponse::class)
         // Register other subclasses as needed
     }
 }

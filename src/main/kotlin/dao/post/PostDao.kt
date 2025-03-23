@@ -9,5 +9,10 @@ interface PostDao {
 
     suspend fun getPost(postId: Long): PostRow?
 
+    suspend fun updateCommentCounts(postId: Long, decrement: Boolean = false): Boolean
+
+    suspend fun updateLikesCount(postId: Long, decrement: Boolean = false): Boolean
+
     suspend fun deletePost(postId: Long): Boolean
+
 }
