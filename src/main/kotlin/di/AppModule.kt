@@ -19,6 +19,8 @@ import com.example.plugins.repository.post.PostRepository
 import com.example.plugins.repository.post.PostRepositoryImpl
 import com.example.plugins.repository.post_comments.PostCommentRepository
 import com.example.plugins.repository.post_comments.PostCommentRepositoryImpl
+import com.example.plugins.repository.post_likes.PostLikesRepository
+import com.example.plugins.repository.post_likes.PostLikesRepositoryImpl
 import com.example.plugins.repository.profile.ProfileRepository
 import com.example.plugins.repository.profile.ProfileRepositoryImpl
 import org.koin.dsl.module
@@ -31,10 +33,11 @@ val appModule = module {
     single<FollowsRepository> {FollowsRepositoryImpl(get(), get())}
     single<FollowsDao> {FollowsDaoImpl()}
 
-    single<PostLikeDao> {PostLikeDaoImpl()}
-
     single<PostDao> {PostDaoImpl()}
     single<PostRepository> {PostRepositoryImpl(get(), get(), get())}
+
+    single<PostLikeDao> {PostLikeDaoImpl()}
+    single<PostLikesRepository> {PostLikesRepositoryImpl(get(), get())}
 
     single<ProfileRepository> {ProfileRepositoryImpl(get(), get())}
 

@@ -5,11 +5,9 @@ import com.example.plugins.security.hashPassword
 import com.example.plugins.util.IdGenerator
 import dao.DatabaseFactory.dbQuery
 import org.h2.engine.User
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
 
 // extends the UserDao data access class
 class UserDaoImpl : UserDao {
@@ -45,6 +43,25 @@ class UserDaoImpl : UserDao {
                 )
                 .where{UserTable.id eq  userId}
                 .map { rowToUser(it) }.singleOrNull()
+        }
+    }
+
+    override suspend fun getUsers(ids: List<Long>): List<UserRow> {
+        return dbQuery {
+            UserTable.select(
+                UserTable.columns
+            ).where{(UserTable.id inList ids)}
+                .map { rowToUser(it) }
+
+        }
+    }
+
+    override suspend fun getPopularUsers(limit: Int): List<UserRow> {
+        return dbQuery {
+            UserTable.selectAll()
+                .orderBy(column = UserTable.followersCount, order =  SortOrder.DESC)
+                .limit(limit)
+                .map { rowToUser(it) }
         }
     }
 

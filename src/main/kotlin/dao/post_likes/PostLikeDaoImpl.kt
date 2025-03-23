@@ -15,7 +15,7 @@ class PostLikeDaoImpl : PostLikeDao {
             val insertStatement = PostLikeTable.insert {
                 it[likeId] = IdGenerator.generateId()
                 it[PostLikeTable.postId] = postId
-                it[PostLikeTable.userId] = postId
+                it[PostLikeTable.userId] = userId
             }
 
             insertStatement.resultedValues?.isNotEmpty() ?: false

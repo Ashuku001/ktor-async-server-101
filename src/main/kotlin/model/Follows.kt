@@ -12,5 +12,20 @@ data class FollowAndUnfollowResponse (
 data class FollowsParams(
     val follower: Long,
     val following: Long,
-    val isFollowing: Boolean, // if true means we are unfollowing the user
+)
+
+@Serializable
+data class FollowUserData(
+    val id: Long,
+    val name: String,
+    val bio: String,
+    val imageUrl: String? = null,
+    val isFollowing: Boolean
+)
+
+@Serializable
+data class FollowsResponse(
+    val success: Boolean,
+    val follows: List<FollowUserData>? = emptyList(),
+    val message: String? = null
 )

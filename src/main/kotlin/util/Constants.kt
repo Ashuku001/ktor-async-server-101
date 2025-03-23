@@ -7,4 +7,5 @@ object Constants {
     const val DEFAULT_PAGE_SIZE = 10
     const val PROFILE_IMAGES_FOLDER = "profile_images/"
     const val PROFILE_IMAGES_FOLDER_PATH = "build/resources/main/static/$PROFILE_IMAGES_FOLDER"
+    const val SUGGESTED_FOLLOWING_LIMIT = 10
 }

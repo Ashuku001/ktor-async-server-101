@@ -31,21 +31,30 @@ class FollowsDaoImpl : FollowsDao {
 
     override suspend fun getFollowers(userId: Long, pageNumber: Int, pageSize: Int): List<Long> {
         return dbQuery {
-            FollowsTable.select(FollowsTable.followingId eq userId) // user being followed
+            FollowsTable
+                .select(FollowsTable.columns)
+                .where(FollowsTable.followingId eq userId) // user being followed
                 .orderBy(FollowsTable.followsDate, SortOrder.DESC)
                 .offset(((pageNumber - 1) * pageSize).toLong())
                 .limit(pageSize)
-                .map { it[FollowsTable.followerId] }
+                .map {
+                    println("follower are here$it")
+                    it[FollowsTable.followerId]
+                }
         }
     }
 
     override suspend fun getFollowing(userId: Long, pageNumber: Int, pageSize: Int): List<Long> {
         return dbQuery {
-            FollowsTable.select(FollowsTable.followerId eq userId)
+            FollowsTable
+                .select(FollowsTable.columns)
+                .where(FollowsTable.followerId eq userId)
                 .orderBy(FollowsTable.followsDate, SortOrder.DESC)
-                .offset(((pageNumber - 1) * pageSize).toLong())
-                .limit(pageSize)
-                .map { it[FollowsTable.followingId] }
+//                .offset(((pageNumber - 1) * pageSize).toLong())
+//                .limit(pageSize)
+                .map {
+                    println(it)
+                    it[FollowsTable.followingId] }
         }
     }
 
