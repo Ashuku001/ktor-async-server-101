@@ -32,8 +32,8 @@ fun Routing.postLikesRouting () {
                     val result = repository.addLike(likeParams)
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
 
                 } catch (anyError: Throwable) {
@@ -64,8 +64,8 @@ fun Routing.postLikesRouting () {
                     val result = repository.removeLike(likeParams)
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
 
                 } catch (anyError: Throwable) {

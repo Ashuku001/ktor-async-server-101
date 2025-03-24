@@ -20,7 +20,7 @@ class PostCommentRepositoryImpl(
 
         return if(postCommentRow == null) {
             Response.Error(
-                code = HttpStatusCode.Conflict.value,
+                code = HttpStatusCode.Conflict,
                 data = CommentResponse(
                     success = false,
                     message = "Could not insert comment into the db"
@@ -42,7 +42,7 @@ class PostCommentRepositoryImpl(
 
         return if (commentRow == null) {
             Response.Error(
-                code = HttpStatusCode.NotFound.value,
+                code = HttpStatusCode.NotFound,
                 data = CommentResponse(
                     success = false,
                     message = "Comment ${params.commentId} not found"
@@ -53,7 +53,7 @@ class PostCommentRepositoryImpl(
 
             if(params.userId != commentRow.userId && params.userId != postOwnerId) {
                 Response.Error(
-                    code = HttpStatusCode.Forbidden.value,
+                    code = HttpStatusCode.Forbidden,
                     data = CommentResponse(
                         success = false,
                         message = "User ${params.userId} cannot delete comment ${params.commentId}"
@@ -72,7 +72,7 @@ class PostCommentRepositoryImpl(
                     )
                 } else {
                     Response.Error(
-                        code = HttpStatusCode.Conflict.value,
+                        code = HttpStatusCode.Conflict,
                         data = CommentResponse(
                             success = false,
                             message = "The comment could not be removed"

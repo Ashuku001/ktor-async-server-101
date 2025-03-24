@@ -37,8 +37,8 @@ fun Routing.followsRouting (
                 val result = repository.followUser(follower = params.follower, following = params.following)
 
                 call.respond(
-                    status = HttpStatusCode.OK,
-                    message = result
+                    status = result.code,
+                    message = result.data
                 )
             }
 
@@ -59,8 +59,8 @@ fun Routing.followsRouting (
                 val result = repository.unfollowUser(follower = params.follower, following = params.following)
 
                 call.respond(
-                    status = HttpStatusCode.OK,
-                    message = result
+                    status = result.code,
+                    message = result.data
                 )
             }
 
@@ -73,8 +73,8 @@ fun Routing.followsRouting (
                     val result = repository.getFollowers(userId = userId, pageNumber = page, pageSize = limit)
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
 
                 } catch (badRequestError: BadRequestException) {
@@ -83,7 +83,6 @@ fun Routing.followsRouting (
                         message = "Invalid or missing parameters"
                     )
                 } catch (anyError: Throwable) {
-                    println(anyError)
                     call.respond(
                         status = HttpStatusCode.InternalServerError,
                         message = "An unexpected error occurred please try again"
@@ -100,8 +99,8 @@ fun Routing.followsRouting (
                     val result = repository.getFollowing(userId = userId, pageNumber = page, pageSize = limit)
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
 
                 } catch (badRequestError: BadRequestException) {
@@ -110,7 +109,6 @@ fun Routing.followsRouting (
                         message = "Invalid or missing parameters"
                     )
                 } catch (anyError: Throwable) {
-                    println(anyError)
 
                     call.respond(
                         status = HttpStatusCode.InternalServerError,
@@ -120,14 +118,16 @@ fun Routing.followsRouting (
             }
 
             get("/suggestions") {
+                println("PINGED SUGGESTION")
                 try {
                     val userId = call.getLongParameter(name = "userId", isQueryParameter = true)
 
                     val result = repository.getFollowingSuggestions(userId)
 
+                    println("PINGED SUGGESTION > $result")
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
 
                 } catch (badRequestError: BadRequestException) {
@@ -136,7 +136,6 @@ fun Routing.followsRouting (
                         message = "Invalid or missing parameters"
                     )
                 } catch (anyError: Throwable) {
-                    println(anyError)
 
                     call.respond(
                         status = HttpStatusCode.InternalServerError,

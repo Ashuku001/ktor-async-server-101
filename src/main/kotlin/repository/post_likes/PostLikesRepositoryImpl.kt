@@ -16,7 +16,7 @@ class PostLikesRepositoryImpl(
 
         return if(likeExists) {
             Response.Error(
-                code = HttpStatusCode.Forbidden.value,
+                code = HttpStatusCode.Forbidden,
                 data = LikeResponse(
                     success = false,
                     message = "Post already liked"
@@ -31,14 +31,14 @@ class PostLikesRepositoryImpl(
             if(likeAdded) {
                 postDao.updateLikesCount(postId = params.postId, decrement = false)
                 Response.Success(
-                    code = HttpStatusCode.OK.value,
+                    code = HttpStatusCode.OK,
                     data = LikeResponse(
                         success = true
                     )
                 )
             } else {
                 Response.Error(
-                    code = HttpStatusCode.Conflict.value,
+                    code = HttpStatusCode.Conflict,
                     data = LikeResponse(
                         success = false,
                         message = "Unexpected error, try again!"
@@ -54,7 +54,7 @@ class PostLikesRepositoryImpl(
 
         return if(!likeExists) {
             Response.Error(
-                code = HttpStatusCode.Forbidden.value,
+                code = HttpStatusCode.Forbidden,
                 data = LikeResponse(
                     success = false,
                     message = "Post like does not exist"
@@ -69,14 +69,14 @@ class PostLikesRepositoryImpl(
             if(likeRemoved) {
                 postDao.updateLikesCount(postId = params.postId, decrement = true)
                 Response.Success(
-                    code = HttpStatusCode.OK.value,
+                    code = HttpStatusCode.OK,
                     data = LikeResponse(
                         success = true
                     )
                 )
             } else {
                 Response.Error(
-                    code = HttpStatusCode.Conflict.value,
+                    code = HttpStatusCode.Conflict,
                     data = LikeResponse(
                         success = false,
                         message = "Unexpected could not remove like, try again later."

@@ -38,7 +38,6 @@ class FollowsDaoImpl : FollowsDao {
                 .offset(((pageNumber - 1) * pageSize).toLong())
                 .limit(pageSize)
                 .map {
-                    println("follower are here$it")
                     it[FollowsTable.followerId]
                 }
         }
@@ -50,10 +49,9 @@ class FollowsDaoImpl : FollowsDao {
                 .select(FollowsTable.columns)
                 .where(FollowsTable.followerId eq userId)
                 .orderBy(FollowsTable.followsDate, SortOrder.DESC)
-//                .offset(((pageNumber - 1) * pageSize).toLong())
-//                .limit(pageSize)
+                .offset(((pageNumber - 1) * pageSize).toLong())
+                .limit(pageSize)
                 .map {
-                    println(it)
                     it[FollowsTable.followingId] }
         }
     }
