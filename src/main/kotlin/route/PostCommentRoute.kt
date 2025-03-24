@@ -37,8 +37,8 @@ fun Routing.postCommentRouting () {
                     val result = repository.addComment(params)
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
                 } catch (anyError: Throwable) {
                     call.respond(
@@ -51,7 +51,6 @@ fun Routing.postCommentRouting () {
             delete(path = "/delete"){
                 try {
                     val params = call.receiveNullable<RemoveCommentParams>()
-                    println("IN HERE")
                     if (params == null) {
                         call.respond(
                             status = HttpStatusCode.BadRequest,
@@ -62,7 +61,6 @@ fun Routing.postCommentRouting () {
                         )
                         return@delete
                     }
-                    println(params)
 
                     val result = repository.removeComment(params)
 

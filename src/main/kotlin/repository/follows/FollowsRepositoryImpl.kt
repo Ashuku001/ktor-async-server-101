@@ -17,7 +17,7 @@ class FollowsRepositoryImpl(
     override suspend fun followUser(follower: Long, following: Long): Response<FollowAndUnfollowResponse> {
         return if (followDao.isAlreadyFollowing(follower, following)) {
             Response.Error(
-                code = HttpStatusCode.Forbidden.value,
+                code = HttpStatusCode.Forbidden,
                 data = FollowAndUnfollowResponse(
                     success = false,
                     message = "You are already following this user"
@@ -36,7 +36,7 @@ class FollowsRepositoryImpl(
                     )
                 } else {
                     Response.Error(
-                        code = HttpStatusCode.InternalServerError.value,
+                        code = HttpStatusCode.InternalServerError,
                         data = FollowAndUnfollowResponse (
                             success = false,
                             message = "Oops, something went wrong on our side, please try again!"
@@ -45,7 +45,7 @@ class FollowsRepositoryImpl(
                 }
             } else {
                 Response.Error(
-                    code = HttpStatusCode.InternalServerError.value,
+                    code = HttpStatusCode.InternalServerError,
                     data = FollowAndUnfollowResponse (
                         success = false,
                         message = "Oops, something went wrong on our side, please try again!"
@@ -62,14 +62,14 @@ class FollowsRepositoryImpl(
             val success2 = userDao.updateFollowsCount(follower, following, isFollowing = false)
             if(success2) {
                 Response.Success(
-                    code = HttpStatusCode.OK.value,
+                    code = HttpStatusCode.OK,
                     data = FollowAndUnfollowResponse(
                         success = true
                     )
                 )
             } else {
                 Response.Error(
-                    code = HttpStatusCode.InternalServerError.value,
+                    code = HttpStatusCode.InternalServerError,
                     data = FollowAndUnfollowResponse(
                         success = false,
                         message = "Oops, something went wrong on our side, please try again!d"
@@ -78,7 +78,7 @@ class FollowsRepositoryImpl(
             }
         } else {
             Response.Error(
-                code = HttpStatusCode.InternalServerError.value,
+                code = HttpStatusCode.InternalServerError,
                 data = FollowAndUnfollowResponse(
                     success = false,
                     message = "Oops, something went wrong on our side, please try again!f"
@@ -89,13 +89,11 @@ class FollowsRepositoryImpl(
 
     override suspend fun getFollowers(userId: Long, pageNumber: Int, pageSize: Int): Response<FollowsResponse> {
         val followersIds = followDao.getFollowers(userId = userId, pageSize = pageSize, pageNumber = pageNumber)
-        println("FollowerIds $followersIds")
         val followersRows = userDao.getUsers(ids = followersIds)
         val followers = followersRows.map { followerRow ->
             val isFollowing = followDao.isAlreadyFollowing(follower = userId, following = followerRow.id )
             toFollowUserData(userRow = followerRow, isFollowing = isFollowing)
         }
-        println("FOLLOWERS $followers")
         return Response.Success(
             data = FollowsResponse(
                 success = true,
@@ -107,11 +105,8 @@ class FollowsRepositoryImpl(
     override suspend fun getFollowing(userId: Long, pageNumber: Int, pageSize: Int): Response<FollowsResponse> {
         val followersIds = followDao.getFollowing(userId = userId, pageSize = pageSize, pageNumber = pageNumber)
 
-        println("SUGGES$followersIds")
-
         val followersRows = userDao.getUsers(ids = followersIds)
 
-        println("SUGGES$followersRows")
         val following = followersRows.map { followerRow ->
             val isFollowing = followDao.isAlreadyFollowing(follower = userId, following = followerRow.id )
             toFollowUserData(userRow = followerRow, isFollowing = isFollowing)
@@ -128,7 +123,7 @@ class FollowsRepositoryImpl(
         val hasFollowing = followDao.getFollowing(userId = userId, pageNumber = 0, pageSize = 1).isNotEmpty()
         return if(hasFollowing) {
             Response.Error(
-                code = HttpStatusCode.Forbidden.value,
+                code = HttpStatusCode.Forbidden,
                 data = FollowsResponse(
                     success = false,
                     message = "User has following"

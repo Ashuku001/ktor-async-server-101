@@ -17,7 +17,7 @@ class AuthRepositoryImpl(
     override suspend fun signUp(params: SignUpParams): Response<AuthResponse> {
         return if (userAlreadyExist(params.email)) {
             Response.Error(
-                code = HttpStatusCode.Conflict.value,
+                code = HttpStatusCode.Conflict,
                 data = AuthResponse(
                     errorMessage = "A user with this email already exist."
                 )
@@ -27,7 +27,7 @@ class AuthRepositoryImpl(
 
             if (insertedUser == null) {
                 Response.Error(
-                    code = HttpStatusCode.InternalServerError.value,
+                    code = HttpStatusCode.InternalServerError,
                     data = AuthResponse(
                         errorMessage = "Oops, sorry we could not register the user, try later"
                     )
@@ -46,7 +46,7 @@ class AuthRepositoryImpl(
                             followingCount = insertedUser.followingCount
                         )
                     ),
-                    code = HttpStatusCode.OK.value
+                    code = HttpStatusCode.OK
                 )
             }
         }
@@ -57,7 +57,7 @@ class AuthRepositoryImpl(
 
         return if (user == null) {
             Response.Error(
-                code = HttpStatusCode.NotFound.value,
+                code = HttpStatusCode.NotFound,
                 data = AuthResponse(
                     errorMessage = "Invalid credentials, no user with this email!"
                 )
@@ -81,7 +81,7 @@ class AuthRepositoryImpl(
                 )
             } else {
                 Response.Error(
-                    code = HttpStatusCode.Forbidden.value,
+                    code = HttpStatusCode.Forbidden,
                     data = AuthResponse(
                         errorMessage = "Username or password dig not match"
                     )

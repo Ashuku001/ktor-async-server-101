@@ -63,8 +63,8 @@ fun Routing.postRouting () {
                 } else {
                     val result = postRepository.createPost(imageUrl, postTextParams!!)
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
                 }
 
@@ -77,8 +77,8 @@ fun Routing.postRouting () {
                     val result = postRepository.getPost(postId = postId, currentUserId = currentUserId)
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
                 } catch (badRequestError: BadRequestException) { // catch error thrown by getLongParameter
                     return@get
@@ -98,8 +98,8 @@ fun Routing.postRouting () {
                     val result = postRepository.deletePost(postId = postId)
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
                 } catch (badRequestError: BadRequestException) {
                     return@delete
@@ -131,13 +131,12 @@ fun Routing.postRouting () {
                     )
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
                 }catch (badRequestError: BadRequestException) { // catch error thrown by getLongParameter
                     return@get
                 } catch (anyError: Throwable) {
-                    println(anyError)
                     call.respond(
                         status = HttpStatusCode.InternalServerError,
                         message = PostResponse(
@@ -165,8 +164,8 @@ fun Routing.postRouting () {
                     )
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
                 }catch (badRequestError: BadRequestException) { // catch error thrown by getLongParameter
                     return@get

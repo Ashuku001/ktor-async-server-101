@@ -32,7 +32,7 @@ class PostRepositoryImpl (
 
         } else {
             Response.Error(
-                code = HttpStatusCode.InternalServerError.value,
+                code = HttpStatusCode.InternalServerError,
                 data = PostResponse(
                     success = false,
                     message = "Post was not inserted in the db"
@@ -43,16 +43,11 @@ class PostRepositoryImpl (
 
     override suspend fun getFeedPosts(userId: Long, pageNumber: Int, pageSize: Int): Response<PostsResponse> {
         val followingUsers = followsDao.getAllFollowing(userId = userId,).toMutableList()
-        println(userId)
-        println("following-1$followingUsers")
 
         followingUsers.add(userId)
 
-        println("following$followingUsers")
 
         val postsRows = postDao.getFeedPost(userId = userId, follows = followingUsers, pageSize = pageSize, pageNumber = pageNumber)
-
-        println("I am her3JKJKj$followingUsers")
 
         val posts = postsRows.map { toPost(
             postRow = it,
@@ -94,7 +89,7 @@ class PostRepositoryImpl (
         val post = postDao.getPost(postId)
         return if (post == null) {
             Response.Error(
-                code = HttpStatusCode.InternalServerError.value,
+                code = HttpStatusCode.InternalServerError,
                 data = PostResponse(
                     success = false,
                     message = "Could not retrieve post from the database"
@@ -125,7 +120,7 @@ class PostRepositoryImpl (
             )
         } else {
             Response.Error(
-                code = HttpStatusCode.InternalServerError.value,
+                code = HttpStatusCode.InternalServerError,
                 data = PostResponse(
                     success = false,
                     message = "Post could not be deleted from db"

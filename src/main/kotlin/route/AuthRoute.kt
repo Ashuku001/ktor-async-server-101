@@ -15,6 +15,7 @@ fun Routing.authRouting(){
 
     route(path = "/signup") {
         post {
+            println("Pinged sign up")
             // takes the JSON and deserialize it
             val params = call.receiveNullable<SignUpParams>()
             // deserialize failed
@@ -27,15 +28,19 @@ fun Routing.authRouting(){
             }
 
             val result = repository.signUp(params = params)
+
+            println("result $result", )
             call.respond(
-                status = HttpStatusCode.OK,
-                message = result
+                status = result.code,
+                message = result.data
             )
         }
     }
 
     route(path = "/signin") {
         post {
+            println("Pinged")
+
             // takes the JSON and deserialize it
             val params = call.receiveNullable<SignInParams>()
             // deserialize failed
@@ -48,9 +53,11 @@ fun Routing.authRouting(){
             }
 
             val result = repository.signIn(params = params)
+
+            println("RESULT $result")
             call.respond(
-                status = HttpStatusCode.OK,
-                message = result
+                status = result.code,
+                message = result.data
             )
         }
     }

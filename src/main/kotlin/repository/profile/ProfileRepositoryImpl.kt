@@ -19,7 +19,7 @@ class ProfileRepositoryImpl (
 
         return if (userRow == null) {
             Response.Error(
-                code = HttpStatusCode.NotFound.value,
+                code = HttpStatusCode.NotFound,
                 data = ProfileResponse(
                     success = false,
                     message = "Could not find user with id $userId"
@@ -57,7 +57,7 @@ class ProfileRepositoryImpl (
                 )
             } else {
                 Response.Error(
-                    code = HttpStatusCode.Conflict.value,
+                    code = HttpStatusCode.Conflict,
                     data = ProfileResponse(
                         success = false,
                         message = "Could not update user: ${updateUserParams.userId} "
@@ -66,7 +66,7 @@ class ProfileRepositoryImpl (
             }
         } else {
             Response.Error(
-                code = HttpStatusCode.NotFound.value,
+                code = HttpStatusCode.NotFound,
                 data = ProfileResponse(
                     success = false,
                     message = "We could not find user: ${updateUserParams.userId} "

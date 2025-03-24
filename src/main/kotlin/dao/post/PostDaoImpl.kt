@@ -26,7 +26,6 @@ class PostDaoImpl: PostDao {
     }
 
     override suspend fun getFeedPost(userId: Long, follows: List<Long>, pageNumber: Int, pageSize: Int): List<PostRow> {
-        println("I AM IN HERE")
         return dbQuery {
             if (follows.size > 1) {
                 getPosts(follows, pageNumber, pageSize)

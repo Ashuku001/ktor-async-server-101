@@ -6,17 +6,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Response<T> {
+    abstract val data: T
+    abstract val code: HttpStatusCode
+
     @Serializable
     data class Success<T>(
-        val data: T,
-        @Contextual
-        val code: Int = HttpStatusCode.OK.value
+        override val data: T,
+        @Contextual override val code: HttpStatusCode = HttpStatusCode.OK
     ) : Response<T>()
 
     @Serializable
     data class Error<T>(
-        val data: T,
-        @Contextual
-        val code: Int
+        override val data: T,
+        @Contextual override val code: HttpStatusCode
     ) : Response<T>()
 }

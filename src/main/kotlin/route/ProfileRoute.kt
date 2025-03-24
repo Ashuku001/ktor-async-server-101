@@ -30,8 +30,8 @@ fun Routing.profileRouting () {
                     val result = repository.getUserById(userId = profileOwnerId, currentUserId = currentUserId)
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
                 } catch (badRequestError: BadRequestException) {
                     call.respond(
@@ -53,7 +53,6 @@ fun Routing.profileRouting () {
                 val multiPartData = call.receiveMultipart()
 
 
-                println("IN HERE")
                 try {
                     multiPartData.forEachPart {
                             partData ->
@@ -64,12 +63,7 @@ fun Routing.profileRouting () {
                             }
                             is PartData.FormItem -> {
                                 if (partData.name == "profile_data") {
-                                    try{
                                         updateUserParams = Json.decodeFromString(partData.value)
-
-                                    } catch (err: Throwable){
-                                        println(err)
-                                    }
                                 }
                             }
                             else -> {} // do NOTHING
@@ -89,8 +83,8 @@ fun Routing.profileRouting () {
 
 
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message =  results
+                        status = results.code,
+                        message =  results.data
                     )
                 } catch (anyError: Throwable) {
                     if (fileName.isNotEmpty()) {
