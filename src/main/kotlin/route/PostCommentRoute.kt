@@ -84,10 +84,14 @@ fun Routing.postCommentRouting () {
 
                     val result = repository.getPostComments(postId = postId, pageNumber = page, pageSize = limit)
 
+                    println("RESUT $result")
+
                     call.respond(
-                        status = HttpStatusCode.OK,
-                        message = result
+                        status = result.code,
+                        message = result.data
                     )
+
+
                 }  catch (badRequestError: BadRequestException) {
                     call.respond(
                         status = HttpStatusCode.BadRequest,

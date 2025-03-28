@@ -7,7 +7,7 @@ data class UpdateUserParams (
     val userId: Long,
     val name: String,
     val bio: String,
-    val imageUrl: String
+    val imageUrl: String? = null
 )
 
 @Serializable

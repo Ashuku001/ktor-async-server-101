@@ -26,8 +26,10 @@ class PostDaoImpl: PostDao {
     }
 
     override suspend fun getFeedPost(userId: Long, follows: List<Long>, pageNumber: Int, pageSize: Int): List<PostRow> {
+        println(follows)
         return dbQuery {
             if (follows.size > 1) {
+                // get posts of the user followed by userID
                 getPosts(follows, pageNumber, pageSize)
             } else {
                 // get the post for the current user wanting to see their own feed
@@ -132,7 +134,28 @@ class PostDaoImpl: PostDao {
     }
 
     private fun getPosts(users: List<Long>,  pageNumber: Int,  pageSize: Int): List<PostRow> {
-        return getPosts(users, pageNumber, pageSize)
+        return PostTable
+            .join(
+                otherTable = UserTable,
+                onColumn = PostTable.userId,
+                otherColumn = UserTable.id,
+                joinType = JoinType.INNER
+            )
+            .select(
+                PostTable.postId,
+                PostTable.caption,
+                PostTable.imageUrl,
+                PostTable.likesCount,
+                PostTable.commentsCount,
+                PostTable.userId,
+                UserTable.name,
+                UserTable.imageUrl,
+                PostTable.createdAt)
+            .where{(PostTable.userId inList users)}
+            .orderBy(column = PostTable.createdAt, order = SortOrder.DESC)
+            .offset(((pageNumber - 1 ) * pageSize).toLong())
+            .limit(pageSize)
+            .map { toPostRow(it) }
     }
 
     private fun toPostRow(row: ResultRow): PostRow {

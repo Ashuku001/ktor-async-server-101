@@ -118,13 +118,11 @@ fun Routing.followsRouting (
             }
 
             get("/suggestions") {
-                println("PINGED SUGGESTION")
                 try {
                     val userId = call.getLongParameter(name = "userId", isQueryParameter = true)
 
                     val result = repository.getFollowingSuggestions(userId)
 
-                    println("PINGED SUGGESTION > $result")
                     call.respond(
                         status = result.code,
                         message = result.data

@@ -55,6 +55,8 @@ class PostRepositoryImpl (
             isOwnPost = it.userId == userId
         ) }
 
+        println(posts.map { it.postId })
+
         return Response.Success(
             data = PostsResponse(
                 posts = posts,
@@ -76,6 +78,9 @@ class PostRepositoryImpl (
             isPostLiked = postLikeDao.isPostLiked(postId = it.postId, userId = currentUserId),
             isOwnPost = it.userId == currentUserId
         ) }
+
+
+        println(posts)
 
         return Response.Success(
             data = PostsResponse(

@@ -31,6 +31,7 @@ fun Routing.postLikesRouting () {
 
                     val result = repository.addLike(likeParams)
 
+
                     call.respond(
                         status = result.code,
                         message = result.data
@@ -47,7 +48,8 @@ fun Routing.postLikesRouting () {
                 }
             }
 
-            delete(path = "/delete") {
+            delete(path = "/remove") {
+
                 try {
                     val likeParams = call.receiveNullable<LikeParams>()
                     if(likeParams == null) {
