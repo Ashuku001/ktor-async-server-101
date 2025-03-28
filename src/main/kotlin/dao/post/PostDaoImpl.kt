@@ -10,10 +10,12 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 
 
 class PostDaoImpl: PostDao {
-    override suspend fun createPost(caption: String, imageUrl: String, userId: Long): Boolean {
+    override suspend fun createPost(caption: String, imageUrl: String, userId: Long): PostRow {
         return dbQuery{
-            val insertStatement = PostTable.insert{
-                it[postId] = IdGenerator.generateId()
+            val newPostId = IdGenerator.generateId()
+
+            PostTable.insert{
+                it[postId] = newPostId
                 it[PostTable.caption] = caption
                 it[PostTable.imageUrl] = imageUrl
                 it[likesCount] = 0
@@ -21,7 +23,27 @@ class PostDaoImpl: PostDao {
                 it[PostTable.userId] = userId
             }
 
-            insertStatement.resultedValues?.singleOrNull() != null
+
+            PostTable.join(
+                otherTable = UserTable,
+                onColumn = PostTable.userId,
+                otherColumn = UserTable.id,
+                joinType = JoinType.INNER
+            )
+                .select(
+                    PostTable.postId,
+                    PostTable.caption,
+                    PostTable.imageUrl,
+                    PostTable.likesCount,
+                    PostTable.commentsCount,
+                    PostTable.userId,
+                    UserTable.name,
+                    UserTable.imageUrl,
+                    PostTable.createdAt
+                )
+                .where{PostTable.postId eq newPostId}
+                .singleOrNull()
+                ?.let { toPostRow(it) } ?: throw Exception("Something went wrong.")
         }
     }
 
@@ -77,6 +99,7 @@ class PostDaoImpl: PostDao {
     }
 
     override suspend fun getPost(postId: Long): PostRow? {
+        println("GETTING POST $postId", )
         return dbQuery {
             PostTable.join(
                 otherTable = UserTable,
