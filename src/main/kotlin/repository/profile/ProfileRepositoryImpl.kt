@@ -29,6 +29,7 @@ class ProfileRepositoryImpl (
             val isFollowing = followsDao.isAlreadyFollowing(follower = currentUserId, following = userId)
             val isOwnProfile =  userId == currentUserId
 
+            println("<>>>>>>>>>>> $userRow")
             Response.Success(
                 data = ProfileResponse(
                     success = true,
@@ -40,12 +41,11 @@ class ProfileRepositoryImpl (
 
     override suspend fun updateUser(updateUserParams: UpdateUserParams): Response<ProfileResponse> {
         val userExists = userDao.findById(userId = updateUserParams.userId) != null
-
         return if (userExists) {
             val userUpdated = userDao.updateUser(
                 userId = updateUserParams.userId,
                 name = updateUserParams.name,
-                imageUrl = updateUserParams.imageUrl,
+                imageUrl = updateUserParams.imageUrl ?: "",
                 bio = updateUserParams.bio
             )
 

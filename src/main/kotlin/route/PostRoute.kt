@@ -123,6 +123,8 @@ fun Routing.postRouting () {
                     val currentUserId = call.getLongParameter(name = "currentUserId", isQueryParameter = true)
                     val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 0
                     val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: Constants.DEFAULT_PAGE_SIZE
+                    println("$page, $limit")
+
 
                     val result = postRepository.getFeedPosts(
                         userId = currentUserId,
@@ -149,6 +151,7 @@ fun Routing.postRouting () {
 
             get(path = "/{userId}") {
                 try {
+                    println("pinged post by user")
                     val postsOwnerId = call.getLongParameter(name = "userId")
                     val currentUserId = call.getLongParameter(name = "currentUserId", isQueryParameter = true)
 
@@ -162,6 +165,8 @@ fun Routing.postRouting () {
                         pageNumber = page,
                         pageSize = limit,
                     )
+
+                    println(result)
 
                     call.respond(
                         status = result.code,

@@ -25,6 +25,7 @@ fun Routing.profileRouting () {
             get(path = "/{userId}") {
                 try {
                     val profileOwnerId = call.getLongParameter(name = "userId")
+
                     val currentUserId = call.getLongParameter(name = "currentUserId", isQueryParameter = true)
 
                     val result = repository.getUserById(userId = profileOwnerId, currentUserId = currentUserId)
@@ -48,30 +49,36 @@ fun Routing.profileRouting () {
             }
 
             post(path = "/update"){
+                println("pinged update")
                 var fileName = ""
                 var updateUserParams: UpdateUserParams? = null
                 val multiPartData = call.receiveMultipart()
-
-
                 try {
                     multiPartData.forEachPart {
                             partData ->
                         when(partData) {
                             // an image
                             is PartData.FileItem -> {
+                                println("HERE file")
+
                                 fileName = partData.saveFile(folderPath = Constants.PROFILE_IMAGES_FOLDER_PATH)
                             }
                             is PartData.FormItem -> {
+                                println("HERE data ${partData.name}")
+                                println("HERE data ${partData.value}")
+
                                 if (partData.name == "profile_data") {
+                                    try{
                                         updateUserParams = Json.decodeFromString(partData.value)
+                                    } catch (e: Throwable){
+                                        println(e)
+                                    }
                                 }
                             }
                             else -> {} // do NOTHING
                         }
                         partData.dispose() // we don't need the PartData
                     }
-
-
 
                     val imageUrl = "${Constants.BASE_URL}${Constants.PROFILE_IMAGES_FOLDER}$fileName"
 
@@ -81,6 +88,7 @@ fun Routing.profileRouting () {
                         )
                     )
 
+                    println("the result $results")
 
                     call.respond(
                         status = results.code,
